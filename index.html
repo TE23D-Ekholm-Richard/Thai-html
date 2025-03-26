@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thai Alphabet Quiz</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            background-color: #f4f4f4;
+        }
+        .quiz-container { 
+            max-width: 500px; 
+            margin: auto; 
+            padding: 20px; 
+            border-radius: 10px; 
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button { 
+            margin-top: 10px; 
+            padding: 8px 16px;  /* Smaller padding */
+            cursor: pointer; 
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #question {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .thai-symbol {
+            font-size: 60px; /* Default size of Thai symbols */
+            color: #d35400;
+        }
+        .thai-symbol.sound-mode {
+            font-size: 80px; /* Larger size for Thai symbols in Sound Mode */
+        }
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 80%;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #feedback {
+            margin-top: 10px; 
+            font-weight: bold; 
+            font-size: 18px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin: 5px;
+            background-color: white;
+            cursor: pointer;
+        }
+        #preview {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Thai Alphabet Quiz</h2>
+        <label for="mode">Select mode:</label>
+        <select id="mode" onchange="updatePreview()">
+            <option value="consonants">Consonants</option>
+            <option value="vowels">Vowels</option>
+        </select>
+        <label for="range">Select range:</label>
+        <select id="range" onchange="updatePreview()">
+            <option value="5">First 5</option>
+            <option value="next5">Next 5</option>
+            <option value="10">First 10</option>
+            <option value="15">First 15</option>
+            <option value="20">First 20</option>
+            <option value="25">First 25</option> <!-- Added First 25 -->
+            <option value="all">Full Set</option>
+        </select>
+        <p id="preview">Selected Letters: (Select mode and range)</p>
+        <button onclick="startQuiz()">Start Quiz</button>
+        <p id="question">Press Start to Begin</p>
+        <p class="thai-symbol" id="thai-symbol"></p>
+        <input type="text" id="answer" placeholder="Your answer here" onkeypress="handleKeyPress(event)" autofocus />
+        <button onclick="submitAndNext()">Submit & Next</button>
+        <p id="score">Score: 0</p>
+        <p id="feedback"></p>
+    </div>
+    
+    <script>
+        let selectedSet = [];
+        let currentQuestion = "";
+        let previousQuestion = null;  // Variable to store the previous question
+        let score = 0;
+
+        const thaiConsonants = [
+            ["ก", "k"], ["ข", "kh"], ["ค", "kh"], ["ง", "ng"], ["จ", "j"], ["ฉ", "ch"], ["ช", "ch"], ["ซ", "s"], ["ฌ", "ch"], ["ญ", "y"],
+            ["ฎ", "d"], ["ฑ", "th"], ["ฒ", "th"], ["ณ", "n"], ["ด", "d"], ["ต", "t"], ["ถ", "th"], ["ท", "th"], ["ธ", "th"], ["น", "n"],
+            ["บ", "b"], ["ป", "p"], ["ผ", "ph"], ["ฝ", "f"], ["พ", "ph"], ["ฟ", "f"], ["ภ", "ph"], ["ม", "m"], ["ย", "y"], ["ร", "r"],
+            ["ล", "l"], ["ว", "w"], ["ศ", "s"], ["ษ", "s"], ["ส", "s"], ["ห", "h"], ["ฬ", "l"], ["อ", "o"], ["ฮ", "h"]
+        ];
+        
+        const thaiVowels = [
+            ["อะ", "a"], ["อา", "aa"], ["อิ", "i"], ["อี", "ii"], ["อึ", "ue"], ["อื", "uee"], ["อุ", "u"], ["อู", "uu"], ["เอะ", "e"], ["เอ", "ee"],
+            ["แอะ", "ae"], ["แอ", "aae"], ["โอะ", "o"], ["โอ", "oo"], ["เอาะ", "aw"], ["ออ", "aw"], ["เออ", "oe"], ["ออ", "or"], ["อัว", "ua"],
+            ["อิอิ", "ii"], ["อือ", "ue"], ["อุอุ", "uu"], ["อะ", "a"], ["อา", "aa"]
+        ];
+
+        function updatePreview() {
+            const mode = document.getElementById("mode").value;
+            const range = document.getElementById("range").value;
+
+            let previewSet = [];
+
+            if (mode === "consonants") {
+                if (range === "5") {
+                    previewSet = thaiConsonants.slice(0, 5);
+                } else if (range === "next5") {
+                    previewSet = thaiConsonants.slice(5, 10);
+                } else if (range === "10") {
+                    previewSet = thaiConsonants.slice(0, 10);
+                } else if (range === "15") {
+                    previewSet = thaiConsonants.slice(0, 15);
+                } else if (range === "20") {
+                    previewSet = thaiConsonants.slice(0, 20);
+                } else if (range === "25") {  // Handle First 25 range
+                    previewSet = thaiConsonants.slice(0, 25);
+                } else if (range === "all") {
+                    previewSet = thaiConsonants;
+                }
+            } else if (mode === "vowels") {
+                if (range === "5") {
+                    previewSet = thaiVowels.slice(0, 5);
+                } else if (range === "next5") {
+                    previewSet = thaiVowels.slice(5, 10);
+                } else if (range === "10") {
+                    previewSet = thaiVowels.slice(0, 10);
+                } else if (range === "15") {
+                    previewSet = thaiVowels.slice(0, 15);
+                } else if (range === "20") {
+                    previewSet = thaiVowels.slice(0, 20);
+                } else if (range === "25") {  // Handle First 25 range
+                    previewSet = thaiVowels.slice(0, 25);
+                } else if (range === "all") {
+                    previewSet = thaiVowels;
+                }
+            }
+            
+            document.getElementById("preview").innerText = "Selected Letters: " + previewSet.map(item => item[0]).join(", ");
+        }
+
+        function startQuiz() {
+            const mode = document.getElementById("mode").value;
+            const range = document.getElementById("range").value;
+            let fullSet = [];
+
+            if (mode === "consonants") {
+                fullSet = thaiConsonants;
+            } else if (mode === "vowels") {
+                fullSet = thaiVowels;
+            }
+
+            if (range === "5") {
+                selectedSet = fullSet.slice(0, 5);
+            } else if (range === "next5") {
+                selectedSet = fullSet.slice(5, 10);
+            } else if (range === "10") {
+                selectedSet = fullSet.slice(0, 10);
+            } else if (range === "15") {
+                selectedSet = fullSet.slice(0, 15);
+            } else if (range === "20") {
+                selectedSet = fullSet.slice(0, 20);
+            } else if (range === "25") {  // Handle First 25 range
+                selectedSet = fullSet.slice(0, 25);
+            } else {
+                selectedSet = fullSet;
+            }
+            
+            score = 0;
+            document.getElementById("score").innerText = "Score: " + score;
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (selectedSet.length === 0) return;
+
+            let randomIndex;
+            let newQuestion;
+
+            do {
+                randomIndex = Math.floor(Math.random() * selectedSet.length);
+                newQuestion = selectedSet[randomIndex];
+            } while (newQuestion === previousQuestion);  // Prevent same letter from appearing twice
+
+            currentQuestion = newQuestion;
+            previousQuestion = currentQuestion;  // Update previous question
+
+            document.getElementById("question").innerText = "What is the Romanized pronunciation of:";
+            document.getElementById("thai-symbol").innerText = currentQuestion[0];
+            document.getElementById("answer").value = "";
+            document.getElementById("answer").focus();
+            document.getElementById("feedback").innerText = "";
+        }
+
+        function submitAndNext() {
+            const answerInput = document.getElementById("answer").value.trim().toLowerCase();
+            const correctAnswer = currentQuestion[1].toLowerCase();
+            const feedbackElement = document.getElementById("feedback");
+
+            if (answerInput === correctAnswer) {
+                feedbackElement.innerText = "Correct! " + currentQuestion[1];
+                feedbackElement.className = "correct";
+                score++;
+            } else {
+                feedbackElement.innerText = "Incorrect! Correct answer: " + currentQuestion[1];
+                feedbackElement.className = "incorrect";
+            }
+
+            document.getElementById("score").innerText = "Score: " + score;
+            setTimeout(nextQuestion, 1000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                submitAndNext();
+            }
+        }
+    </script>
+</body>
+</html>
