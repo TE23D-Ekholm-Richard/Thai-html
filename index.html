@@ -3,420 +3,1435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thai Alphabet Quiz</title>
+    <title>Thai Script Master</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
-            background-color: #f4f4f4;
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --correct: #10b981;
+            --incorrect: #ef4444;
+            --warning: #f59e0b;
+            --gray: #94a3b8;
         }
-        .quiz-container { 
-            max-width: 500px; 
-            margin: auto; 
-            padding: 20px; 
-            border-radius: 10px; 
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode header {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .dark-mode .sidebar {
+            background: #1e293b;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .main-content {
+            background: #1e293b;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .dark-mode label {
+            color: #e2e8f0;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray);
+            border-radius: 0.5rem;
+            font-size: 1rem;
             background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        button { 
-            margin-top: 10px; 
-            padding: 8px 16px; 
-            cursor: pointer; 
-            background-color: #4CAF50;
+        
+        .dark-mode select,
+        .dark-mode input {
+            background-color: #334155;
+            border-color: #475569;
+            color: white;
+        }
+        
+        button {
+            background-color: var(--primary);
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #question {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .thai-symbol {
-            font-size: 60px; /* Default size of Thai symbols */
-            color: #d35400;
-        }
-        .thai-symbol.sound-mode {
-            font-size: 80px; /* Larger size for Thai symbols in Sound Mode */
-        }
-        input {
-            padding: 8px;
-            font-size: 16px;
-            width: 80%;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #feedback {
-            margin-top: 10px; 
-            font-weight: bold; 
-            font-size: 18px;
-        }
-        .correct {
-            color: green;
-        }
-        .incorrect {
-            color: red;
-        }
-        select {
-            padding: 8px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin: 5px;
-            background-color: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        #preview {
-            margin-top: 15px;
-            font-size: 20px;
-            font-weight: bold;
+        
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
         }
-        #alphabet-table {
-            margin-top: 20px;
-            width: 80%;
-            margin: auto;
-            border-collapse: collapse;
+        
+        button:active {
+            transform: translateY(0);
         }
-        #alphabet-table th, #alphabet-table td {
-            padding: 10px;
-            border: 1px solid #ddd;
+        
+        .btn-secondary {
+            background-color: var(--secondary);
         }
-        #alphabet-table th {
-            background-color: #f2f2f2;
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
         }
-        #alphabet-table td {
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .dark-mode .btn-outline {
+            color: #93c5fd;
+            border-color: #93c5fd;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+        
+        .dark-mode .btn-outline:hover {
+            background-color: rgba(147, 197, 253, 0.1);
+        }
+        
+        .quiz-area {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .thai-char {
+            font-size: 5rem;
+            margin: 1rem 0;
+            color: var(--primary);
+            line-height: 1;
+        }
+        
+        .pronunciation {
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: var(--accent);
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .option-btn {
+            font-size: 2rem;
+            padding: 2rem 1rem;
+            background-color: white;
+            border: 1px solid var(--gray);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .dark-mode .option-btn {
+            background-color: #334155;
+            border-color: #475569;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .option-btn:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+        }
+        
+        .input-group {
+            margin: 2rem 0;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.25rem;
+            border: 2px solid var(--gray);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
-        #alphabet-container {
-            display: none; /* Initially hide the alphabet table */
-            margin-top: 20px;
+        
+        .dark-mode .answer-input {
+            background-color: #334155;
+            border-color: #475569;
+            color: white;
         }
-        .option-button {
-            font-size: 30px;
-            padding: 15px;
-            margin: 5px;
-            min-width: 60px;
-            background-color: #3498db;
+        
+        .feedback {
+            font-size: 1.25rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 0.5rem;
         }
-        .option-button:hover {
-            background-color: #2980b9;
+        
+        .correct-feedback {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+            border: 1px solid var(--correct);
         }
-        #options-container {
+        
+        .incorrect-feedback {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--incorrect);
+            border: 1px solid var(--incorrect);
+        }
+        
+        .extra-info {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: var(--dark);
+        }
+        
+        .dark-mode .extra-info {
+            color: #cbd5e1;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            height: 0.5rem;
+        }
+        
+        .dark-mode .progress-container {
+            background-color: #334155;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: rgba(241, 245, 249, 0.5);
+        }
+        
+        .dark-mode .stat-box {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stroke-container {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            position: relative;
+        }
+        
+        .stroke-svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .stroke-path {
+            stroke: var(--primary);
+            stroke-width: 3;
+            stroke-linecap: round;
+            fill: none;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s forwards;
+        }
+        
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        .tone-marker {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: confetti-fall 3s ease-out forwards;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .reference-container {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .reference-section {
+            margin-bottom: 2rem;
+        }
+        
+        .reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .reference-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: rgba(241, 245, 249, 0.5);
+            text-align: center;
+        }
+        
+        .dark-mode .reference-item {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+        
+        .reference-char {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reference-roman {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+        
+        .reference-class {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 999px;
+            background-color: var(--primary);
+            color: white;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .high-class {
+            background-color: #ef4444;
+        }
+        
+        .mid-class {
+            background-color: #10b981;
+        }
+        
+        .low-class {
+            background-color: #3b82f6;
+        }
+        
+        .flashcard-controls {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .flashcard-btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        /* Reading Practice Styles */
+        #reading-practice {
+            display: none;
+            padding: 2rem;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .difficulty-btn {
+            padding: 8px 16px;
+            background-color: #e2e8f0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .difficulty-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .thai-reading-text {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .transliteration-text, .translation-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: rgba(241, 245, 249, 0.5);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .dark-mode .transliteration-text,
+        .dark-mode .translation-text {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+        
+        .reading-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
             margin-top: 20px;
         }
-        #text-input-container {
-            display: none;
+
+        /* Mode selector tabs */
+        .mode-tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .dark-mode .mode-tabs {
+            border-bottom-color: #334155;
+        }
+
+        .mode-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .mode-tab.active {
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .thai-char {
+                font-size: 3rem;
+            }
+            
+            .pronunciation {
+                font-size: 1.5rem;
+            }
+
+            .mode-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .mode-tab {
+                border-bottom: none;
+                border-left: 3px solid transparent;
+            }
+
+            .mode-tab.active {
+                border-bottom: none;
+                border-left-color: var(--primary);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <h2>Thai Alphabet Quiz</h2>
-        <label for="mode">Select mode:</label>
-        <select id="mode" onchange="updatePreview()">
-            <option value="consonants">Consonants</option>
-            <option value="vowels">Vowels</option>
-            <option value="match-symbol">Match the Symbol</option>
-        </select>
-        <label for="range">Select range:</label>
-        <select id="range" onchange="updatePreview()">
-            <option value="5">First 5</option>
-            <option value="next5">Next 5</option>
-            <option value="10">First 10</option>
-            <option value="15">First 15</option>
-            <option value="20">First 20</option>
-            <option value="25">First 25</option>
-            <option value="all">Full Set</option>
-        </select>
-        <p id="preview">Selected Letters: (Select mode and range)</p>
-        <button onclick="startQuiz()">Start Quiz</button>
-        <p id="question">Press Start to Begin</p>
-        <p class="thai-symbol" id="thai-symbol"></p>
+    <div class="container">
+        <header>
+            <h1>Thai Script Master</h1>
+            <button id="theme-toggle" class="btn-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Dark Mode
+            </button>
+        </header>
         
-        <div id="options-container"></div>
-        
-        <div id="text-input-container">
-            <input type="text" id="answer" placeholder="Your answer here" onkeypress="handleKeyPress(event)" autofocus />
-            <button onclick="submitAndNext()">Submit & Next</button>
-        </div>
-        
-        <p id="score">Score: 0</p>
-        <p id="feedback"></p>
-        
-        <button onclick="showAlphabet()">Show Full Thai Alphabet</button>
-
-        <div id="alphabet-container">
-            <h3>Thai Alphabet</h3>
-            <table id="alphabet-table">
-                <thead>
-                    <tr>
-                        <th>Consonants</th>
-                        <th>Pronunciation</th>
-                        <th>Vowels</th>
-                        <th>Pronunciation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="2">Consonants</td>
-                        <td colspan="2">Vowels</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="5" id="consonant-column"></td>
-                        <td rowspan="5" id="vowel-column"></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="app-container">
+            <div class="sidebar">
+                <div class="form-group">
+                    <label for="mode">Learning Mode</label>
+                    <select id="mode">
+                        <option value="match-symbol">Match the Symbol</option>
+                        <option value="typing">Typing Practice</option>
+                        <option value="flashcards">Flashcards</option>
+                        <option value="reading">Reading Practice</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="character-set">Character Set</label>
+                    <select id="character-set">
+                        <option value="consonants">Consonants</option>
+                        <option value="vowels">Vowels</option>
+                        <option value="all">All Characters</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="difficulty">Difficulty Level</label>
+                    <select id="difficulty">
+                        <option value="beginner">Beginner (First 10)</option>
+                        <option value="intermediate">Intermediate (First 20)</option>
+                        <option value="advanced">Advanced (All)</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
+                
+                <div id="custom-range" class="form-group" style="display: none;">
+                    <label for="start-range">Start From</label>
+                    <input type="number" id="start-range" min="1" max="44" value="1">
+                    
+                    <label for="end-range">To</label>
+                    <input type="number" id="end-range" min="1" max="44" value="10">
+                </div>
+                
+                <button id="start-btn" class="btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Start Practice
+                </button>
+                
+                <button id="reference-btn" class="btn-outline" style="margin-top: 1rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    View Reference
+                </button>
+            </div>
+            
+            <div class="main-content">
+                <div class="mode-tabs">
+                    <div class="mode-tab active" data-tab="quiz">Character Practice</div>
+                    <div class="mode-tab" data-tab="reading">Reading Practice</div>
+                </div>
+                
+                <div id="quiz-area" class="quiz-area">
+                    <div class="stats">
+                        <div class="stat-box">
+                            <div class="stat-value" id="score">0</div>
+                            <div class="stat-label">Score</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="streak">0</div>
+                            <div class="stat-label">Streak</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="remaining">0</div>
+                            <div class="stat-label">Remaining</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    
+                    <div class="question" id="question">Select options and click Start Practice</div>
+                    
+                    <div id="character-display">
+                        <div class="thai-char" id="thai-char"></div>
+                        <div class="pronunciation" id="pronunciation"></div>
+                        <div id="stroke-container" class="stroke-container"></div>
+                    </div>
+                    
+                    <div id="options-container" class="options-grid"></div>
+                    
+                    <div id="input-container" class="input-group" style="display: none;">
+                        <input type="text" id="answer-input" class="answer-input" placeholder="Type your answer..." autocomplete="off">
+                        <button id="submit-btn" class="btn-secondary">Submit Answer</button>
+                    </div>
+                    
+                    <div id="feedback" class="feedback"></div>
+                    
+                    <div id="flashcard-controls" class="flashcard-controls" style="display: none;">
+                        <button id="show-answer-btn" class="flashcard-btn btn-secondary">Show Answer</button>
+                        <button id="next-card-btn" class="flashcard-btn btn-outline">Next Card</button>
+                    </div>
+                </div>
+                
+                <div id="reading-practice">
+                    <h2>Reading Practice</h2>
+                    <div class="difficulty-selector">
+                        <button class="difficulty-btn active" data-level="1">Level 1</button>
+                        <button class="difficulty-btn" data-level="2">Level 2</button>
+                        <button class="difficulty-btn" data-level="3">Level 3</button>
+                    </div>
+                    
+                    <div class="reading-passage">
+                        <div id="thai-text" class="thai-reading-text"></div>
+                        <div id="transliteration" class="transliteration-text"></div>
+                        <div id="translation" class="translation-text"></div>
+                    </div>
+                    
+                    <div class="reading-controls">
+                        <button id="show-transliteration" class="btn-outline">Show Pronunciation</button>
+                        <button id="show-translation" class="btn-outline">Show Translation</button>
+                        <button id="next-passage" class="btn-secondary">Next Passage</button>
+                    </div>
+                </div>
+                
+                <div id="reference-container" class="reference-container">
+                    <h2>Thai Alphabet Reference</h2>
+                    
+                    <div class="reference-section">
+                        <h3>Consonants</h3>
+                        <div id="consonants-ref" class="reference-grid"></div>
+                    </div>
+                    
+                    <div class="reference-section">
+                        <h3>Vowels</h3>
+                        <div id="vowels-ref" class="reference-grid"></div>
+                    </div>
+                    
+                    <button id="back-to-quiz" class="btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back to Quiz
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        let selectedSet = [];
-        let currentQuestion = "";
-        let previousQuestion = null;
-        let score = 0;
-        let currentOptions = [];
-
+        // Enhanced Thai characters data
         const thaiConsonants = [
-            ["ก", "k"], ["ข", "kh"], ["ค", "kh"], ["ง", "ng"], ["จ", "j"], ["ฉ", "ch"], ["ช", "ch"], ["ซ", "s"], ["ฌ", "ch"], ["ญ", "y"],
-            ["ฎ", "d"], ["ฑ", "th"], ["ฒ", "th"], ["ณ", "n"], ["ด", "d"], ["ต", "t"], ["ถ", "th"], ["ท", "th"], ["ธ", "th"], ["น", "n"],
-            ["บ", "b"], ["ป", "p"], ["ผ", "ph"], ["ฝ", "f"], ["พ", "ph"], ["ฟ", "f"], ["ภ", "ph"], ["ม", "m"], ["ย", "y"], ["ร", "r"],
-            ["ล", "l"], ["ว", "w"], ["ศ", "s"], ["ษ", "s"], ["ส", "s"], ["ห", "h"], ["ฬ", "l"], ["อ", "o"], ["ฮ", "h"]
+            { char: "ก", roman: "k", class: "mid", example: "ไก่ (chicken)", strokes: "M 20,20 L 20,80 L 80,80 L 80,20 Z" },
+            { char: "ข", roman: "kh", class: "high", example: "ไข่ (egg)", strokes: "M 30,20 L 30,80 M 50,20 L 50,80 M 30,50 L 50,50" },
+            { char: "ค", roman: "kh", class: "low", example: "ควาย (buffalo)", strokes: "M 20,20 L 20,80 L 80,80 L 80,20 Z M 40,50 L 60,50" },
+            { char: "ง", roman: "ng", class: "low", example: "งู (snake)", strokes: "M 50,20 Q 70,50 50,80 Q 30,50 50,20" },
+            { char: "จ", roman: "j", class: "mid", example: "จาน (plate)", strokes: "M 30,30 L 70,30 L 70,70 L 30,70 Z M 50,30 L 50,70" },
+            { char: "ฉ", roman: "ch", class: "high", example: "ฉิ่ง (cymbals)", strokes: "M 40,20 L 60,20 L 60,80 L 40,80 Z" },
+            { char: "ช", roman: "ch", class: "low", example: "ช้าง (elephant)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z M 50,20 L 50,60" },
+            { char: "ซ", roman: "s", class: "low", example: "ซื้อ (to buy)", strokes: "M 20,30 L 80,30 L 80,70 L 20,70 Z M 40,30 L 40,70" },
+            { char: "ญ", roman: "y", class: "low", example: "หญิง (woman)", strokes: "M 50,20 L 50,80 M 30,50 L 70,50 M 50,80 L 30,60" },
+            { char: "ด", roman: "d", class: "mid", example: "เด็ก (child)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ต", roman: "t", class: "mid", example: "ตา (eye)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z" },
+            { char: "ถ", roman: "th", class: "high", example: "ถุง (bag)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z M 50,20 L 50,60" },
+            { char: "ท", roman: "th", class: "low", example: "ทหาร (soldier)", strokes: "M 20,20 L 80,20 L 80,60 L 20,60 Z M 50,20 L 50,60" },
+            { char: "น", roman: "n", class: "low", example: "นก (bird)", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "บ", roman: "b", class: "mid", example: "บ้าน (house)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ป", roman: "p", class: "mid", example: "ปลา (fish)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z" },
+            { char: "ผ", roman: "ph", class: "high", example: "ผี (ghost)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z" },
+            { char: "ฝ", roman: "f", class: "high", example: "ฝน (rain)", strokes: "M 30,20 L 70,20 L 70,60 L 30,60 Z M 50,20 L 50,60" },
+            { char: "พ", roman: "ph", class: "low", example: "พริก (chili)", strokes: "M 20,20 L 80,20 L 80,60 L 20,60 Z M 50,20 L 50,60" },
+            { char: "ฟ", roman: "f", class: "low", example: "ฟัน (tooth)", strokes: "M 20,20 L 80,20 L 80,60 L 20,60 Z M 40,20 L 40,60 M 60,20 L 60,60" },
+            { char: "ม", roman: "m", class: "low", example: "แม่ (mother)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ย", roman: "y", class: "low", example: "ยา (medicine)", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ร", roman: "r", class: "low", example: "รถ (car)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 50,20 L 50,80" },
+            { char: "ล", roman: "l", class: "low", example: "ลม (wind)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ว", roman: "w", class: "low", example: "วัน (day)", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ส", roman: "s", class: "high", example: "ส้ม (orange)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ห", roman: "h", class: "high", example: "หู (ear)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 50,20 L 50,80" },
+            { char: "อ", roman: "o", class: "mid", example: "อ่าง (bowl)", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ฮ", roman: "h", class: "low", example: "ฮา (laugh)", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 50,20 L 50,80" }
         ];
         
         const thaiVowels = [
-            ["อะ", "a"], ["อา", "aa"], ["อิ", "i"], ["อี", "ii"], ["อึ", "ue"], ["อื", "uee"], ["อุ", "u"], ["อู", "uu"], ["เอะ", "e"], ["เอ", "ee"],
-            ["แอะ", "ae"], ["แอ", "aae"], ["โอะ", "o"], ["โอ", "oo"], ["เอาะ", "aw"], ["ออ", "aw"], ["เออ", "oe"], ["ออ", "or"], ["อัว", "ua"],
-            ["อิอิ", "ii"], ["อือ", "ue"], ["อุอุ", "uu"], ["อะ", "a"], ["อา", "aa"]
+            { char: "ะ", roman: "a", example: "มะม่วง (mango)", position: "final", strokes: "M 30,50 L 70,50" },
+            { char: "า", roman: "aa", example: "ข้าว (rice)", position: "final", strokes: "M 20,50 L 80,50" },
+            { char: "ิ", roman: "i", example: "ดิฉัน (I, female)", position: "above", strokes: "M 50,30 L 50,50" },
+            { char: "ี", roman: "ii", example: "สี (color)", position: "above", strokes: "M 50,20 L 50,60" },
+            { char: "ึ", roman: "ue", example: "ชื่อ (name)", position: "above", strokes: "M 45,40 Q 50,45 55,40" },
+            { char: "ื", roman: "uee", example: "ถือ (to hold)", position: "above", strokes: "M 40,40 Q 50,50 60,40" },
+            { char: "ุ", roman: "u", example: "คุณ (you)", position: "below", strokes: "M 50,70 L 50,80" },
+            { char: "ู", roman: "uu", example: "ดู (to watch)", position: "below", strokes: "M 50,60 L 50,80" },
+            { char: "เ", roman: "e", example: "เท้า (foot)", position: "leading", strokes: "M 20,50 L 80,50" },
+            { char: "แ", roman: "ae", example: "แม่ (mother)", position: "leading", strokes: "M 20,40 L 80,40 M 20,60 L 80,60" },
+            { char: "โ", roman: "o", example: "โทรศัพท์ (telephone)", position: "leading", strokes: "M 20,50 Q 50,80 80,50" },
+            { char: "ใ", roman: "ai", example: "ใต้ (south)", position: "leading", strokes: "M 20,50 L 80,50 M 50,20 L 50,80" },
+            { char: "ไ", roman: "ai", example: "ไทย (Thai)", position: "leading", strokes: "M 20,50 L 80,50 M 50,20 L 50,80" },
+            { char: "อ", roman: "o", example: "อ่าง (bowl)", position: "leading", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ย", roman: "y", example: "ยา (medicine)", position: "final", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ว", roman: "w", example: "วัน (day)", position: "final", strokes: "M 50,20 L 50,80 M 30,50 L 70,50" },
+            { char: "ฤ", roman: "rue", example: "ฤดู (season)", position: "leading", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z" },
+            { char: "ฤา", roman: "ruea", example: "ฤาษี (hermit)", position: "leading", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 50,20 L 50,80" },
+            { char: "ฦ", roman: "lue", example: "ฦา (rare)", position: "leading", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 40,20 L 40,80 M 60,20 L 60,80" },
+            { char: "ฦา", roman: "luea", example: "ฦาช (rare)", position: "leading", strokes: "M 30,20 L 70,20 L 70,80 L 30,80 Z M 40,20 L 40,80 M 60,20 L 60,80" }
         ];
 
-        function updatePreview() {
-            const mode = document.getElementById("mode").value;
-            const range = document.getElementById("range").value;
+        // Reading practice texts (progressive difficulty)
+        const readingTexts = {
+            1: [
+                {
+                    thai: "แมว นั่ง ที่ เก้าอี้",
+                    transliteration: "maeo nang thi kao-i",
+                    translation: "The cat sits on the chair"
+                },
+                {
+                    thai: "ฉัน กิน ข้าว",
+                    transliteration: "chan kin khao",
+                    translation: "I eat rice"
+                },
+                {
+                    thai: "น้ำ เย็น",
+                    transliteration: "nam yen",
+                    translation: "Cold water"
+                },
+                {
+                    thai: "เขา วิ่ง เร็ว",
+                    transliteration: "khao wing reo",
+                    translation: "He runs fast"
+                },
+                {
+                    thai: "ดอกไม้ สวย",
+                    transliteration: "dok-mai suay",
+                    translation: "The flower is beautiful"
+                }
+            ],
+            2: [
+                {
+                    thai: "วันนี้ อากาศ ดี แดด จ้า",
+                    transliteration: "wan-ni aa-gaat dee daet ja",
+                    translation: "Today the weather is good and sunny"
+                },
+                {
+                    thai: "เด็ก เล่น กับ สุนัข ที่ สวน",
+                    transliteration: "dek len gap sunak thi suan",
+                    translation: "Children play with dogs in the park"
+                },
+                {
+                    thai: "ผม ชอบ กิน ผลไม้ ใน ฤดูร้อน",
+                    transliteration: "phom chop kin phon-la-mai nai rue-dua ron",
+                    translation: "I like to eat fruit in summer"
+                },
+                {
+                    thai: "แม่ ทำ อาหาร เย็น ทุก วัน",
+                    transliteration: "mae tham a-han yen thuk wan",
+                    translation: "Mother cooks dinner every day"
+                },
+                {
+                    thai: "เรา ไป เที่ยว วัด พรุ่งนี้",
+                    transliteration: "rao pai thiao wat phrung-ni",
+                    translation: "We will visit a temple tomorrow"
+                }
+            ],
+            3: [
+                {
+                    thai: "เมื่อวาน เรา ไป เที่ยว วัด ที่ กรุงเทพฯ และ ชม สถาปัตยกรรม สวยงาม",
+                    transliteration: "muea-wan rao pai thiao wat thi krung-thep lae chom sa-tha-pat-ya-kam suay-ngam",
+                    translation: "Yesterday we visited a temple in Bangkok and saw beautiful architecture"
+                },
+                {
+                    thai: "ประเทศไทย มี วัฒนธรรม ที่ น่าสนใจ และ อาหาร อร่อย หลาย จาน",
+                    transliteration: "prathet-thai mi wat-tha-na-tham thi na-son-jai lae a-han a-roi lai chan",
+                    translation: "Thailand has interesting culture and many delicious dishes"
+                },
+                {
+                    thai: "ใน อนาคต ฉัน อยาก เรียน ภาษา ไทย ให้ เก่ง เพราะ ต้องการ ทำงาน ที่ นี่",
+                    transliteration: "nai a-na-khot chan yak rian pha-sa thai hai geng phro tong-gan tham-ngan thi ni",
+                    translation: "In the future, I want to study Thai until I'm proficient because I want to work here"
+                },
+                {
+                    thai: "เมื่อ คืน นี้ ฉัน ฝัน ว่า ไป เที่ยว เกาะ ใต้ แสง จันทร์",
+                    transliteration: "muea khuen ni chan fan wa pai thiao ko tai saeng chan",
+                    translation: "Last night I dreamed that I traveled to an island under the moonlight"
+                },
+                {
+                    thai: "การ เรียน ภาษา ใหม่ เป็น สิ่ง ที่ ท้าทาย แต่ ก็ สนุก และ มี ประโยชน์",
+                    transliteration: "kan rian pha-sa mai pen sing thi tha-thai tae ko sanuk lae mi pra-yot",
+                    translation: "Learning a new language is challenging but also fun and beneficial"
+                }
+            ]
+        };
 
-            let previewSet = [];
+        // Game state
+        let currentMode = "match-symbol";
+        let currentSet = [];
+        let currentQuestion = null;
+        let selectedSet = [];
+        let score = 0;
+        let streak = 0;
+        let totalQuestions = 0;
+        let questionsAnswered = 0;
+        let mistakeTracker = {};
+        let darkMode = false;
+        let previousQuestions = [];
+        let answerRevealed = false;
+        let currentLevel = 1;
+        let currentPassage = 0;
 
-            if (mode === "consonants") {
-                if (range === "5") {
-                    previewSet = thaiConsonants.slice(0, 5);
-                } else if (range === "next5") {
-                    previewSet = thaiConsonants.slice(5, 10);
-                } else if (range === "10") {
-                    previewSet = thaiConsonants.slice(0, 10);
-                } else if (range === "15") {
-                    previewSet = thaiConsonants.slice(0, 15);
-                } else if (range === "20") {
-                    previewSet = thaiConsonants.slice(0, 20);
-                } else if (range === "25") {
-                    previewSet = thaiConsonants.slice(0, 25);
-                } else if (range === "all") {
-                    previewSet = thaiConsonants;
-                }
-                // Show Thai letters for consonant mode
-                document.getElementById("preview").innerText = "Selected Letters: " + previewSet.map(item => item[0]).join(", ");
-            } else if (mode === "vowels") {
-                if (range === "5") {
-                    previewSet = thaiVowels.slice(0, 5);
-                } else if (range === "next5") {
-                    previewSet = thaiVowels.slice(5, 10);
-                } else if (range === "10") {
-                    previewSet = thaiVowels.slice(0, 10);
-                } else if (range === "15") {
-                    previewSet = thaiVowels.slice(0, 15);
-                } else if (range === "20") {
-                    previewSet = thaiVowels.slice(0, 20);
-                } else if (range === "25") {
-                    previewSet = thaiVowels.slice(0, 25);
-                } else if (range === "all") {
-                    previewSet = thaiVowels;
-                }
-                // Show Thai letters for vowel mode
-                document.getElementById("preview").innerText = "Selected Letters: " + previewSet.map(item => item[0]).join(", ");
-            } else if (mode === "match-symbol") {
-                if (range === "5") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(0, 5);
-                } else if (range === "next5") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(5, 10);
-                } else if (range === "10") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(0, 10);
-                } else if (range === "15") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(0, 15);
-                } else if (range === "20") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(0, 20);
-                } else if (range === "25") {
-                    previewSet = [...thaiConsonants, ...thaiVowels].slice(0, 25);
-                } else if (range === "all") {
-                    previewSet = [...thaiConsonants, ...thaiVowels];
-                }
-                // Show romanized letters for match-symbol mode
-                document.getElementById("preview").innerText = "Selected Letters: " + previewSet.map(item => item[1]).join(", ");
+        // DOM elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const modeSelect = document.getElementById('mode');
+        const charSetSelect = document.getElementById('character-set');
+        const difficultySelect = document.getElementById('difficulty');
+        const customRange = document.getElementById('custom-range');
+        const startRange = document.getElementById('start-range');
+        const endRange = document.getElementById('end-range');
+        const startBtn = document.getElementById('start-btn');
+        const referenceBtn = document.getElementById('reference-btn');
+        const quizArea = document.getElementById('quiz-area');
+        const readingPractice = document.getElementById('reading-practice');
+        const referenceContainer = document.getElementById('reference-container');
+        const backToQuiz = document.getElementById('back-to-quiz');
+        const questionEl = document.getElementById('question');
+        const thaiCharEl = document.getElementById('thai-char');
+        const pronunciationEl = document.getElementById('pronunciation');
+        const strokeContainer = document.getElementById('stroke-container');
+        const optionsContainer = document.getElementById('options-container');
+        const inputContainer = document.getElementById('input-container');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const feedbackEl = document.getElementById('feedback');
+        const flashcardControls = document.getElementById('flashcard-controls');
+        const showAnswerBtn = document.getElementById('show-answer-btn');
+        const nextCardBtn = document.getElementById('next-card-btn');
+        const scoreEl = document.getElementById('score');
+        const streakEl = document.getElementById('streak');
+        const remainingEl = document.getElementById('remaining');
+        const progressBar = document.getElementById('progress-bar');
+        const consonantsRef = document.getElementById('consonants-ref');
+        const vowelsRef = document.getElementById('vowels-ref');
+        const thaiTextEl = document.getElementById('thai-text');
+        const transliterationEl = document.getElementById('transliteration');
+        const translationEl = document.getElementById('translation');
+        const showTransliterationBtn = document.getElementById('show-transliteration');
+        const showTranslationBtn = document.getElementById('show-translation');
+        const nextPassageBtn = document.getElementById('next-passage');
+        const modeTabs = document.querySelectorAll('.mode-tab');
+        const difficultyBtns = document.querySelectorAll('.difficulty-btn');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            populateReference();
+            updateCustomRangeVisibility();
+        });
+
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Difficulty selection
+            difficultySelect.addEventListener('change', updateCustomRangeVisibility);
+            
+            // Start quiz
+            startBtn.addEventListener('click', startPractice);
+            
+            // Reference toggle
+            referenceBtn.addEventListener('click', showReference);
+            backToQuiz.addEventListener('click', showQuiz);
+            
+            // Answer submission
+            submitBtn.addEventListener('click', checkTypedAnswer);
+            answerInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkTypedAnswer();
+            });
+            
+            // Flashcard controls
+            showAnswerBtn.addEventListener('click', revealFlashcardAnswer);
+            nextCardBtn.addEventListener('click', nextFlashcard);
+            
+            // Reading practice controls
+            showTransliterationBtn.addEventListener('click', toggleTransliteration);
+            showTranslationBtn.addEventListener('click', toggleTranslation);
+            nextPassageBtn.addEventListener('click', nextReadingPassage);
+            
+            // Difficulty buttons for reading
+            difficultyBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    difficultyBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentLevel = parseInt(this.dataset.level);
+                    currentPassage = 0;
+                    loadPassage();
+                });
+            });
+            
+            // Mode tabs
+            modeTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    modeTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.tab === 'quiz') {
+                        quizArea.style.display = 'block';
+                        readingPractice.style.display = 'none';
+                    } else {
+                        quizArea.style.display = 'none';
+                        readingPractice.style.display = 'block';
+                        startReadingPractice();
+                    }
+                });
+            });
+        }
+
+        function toggleTheme() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode');
+            themeToggle.innerHTML = darkMode ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Light Mode' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg> Dark Mode';
+        }
+
+        function updateCustomRangeVisibility() {
+            customRange.style.display = difficultySelect.value === 'custom' ? 'block' : 'none';
+        }
+
+        function populateReference() {
+            // Populate consonants reference
+            consonantsRef.innerHTML = thaiConsonants.map(con => `
+                <div class="reference-item">
+                    <span class="reference-char">${con.char}</span>
+                    <span class="reference-roman">${con.roman}</span>
+                    ${con.class ? `<span class="reference-class ${con.class}-class">${con.class}</span>` : ''}
+                </div>
+            `).join('');
+            
+            // Populate vowels reference
+            vowelsRef.innerHTML = thaiVowels.map(vow => `
+                <div class="reference-item">
+                    <span class="reference-char">${vow.char}</span>
+                    <span class="reference-roman">${vow.roman}</span>
+                    ${vow.position ? `<span class="reference-class">${vow.position}</span>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function showReference() {
+            quizArea.style.display = 'none';
+            readingPractice.style.display = 'none';
+            referenceContainer.style.display = 'block';
+        }
+
+        function showQuiz() {
+            quizArea.style.display = 'block';
+            readingPractice.style.display = 'none';
+            referenceContainer.style.display = 'none';
+        }
+
+        function startPractice() {
+            currentMode = modeSelect.value;
+            
+            if (currentMode === 'reading') {
+                startReadingPractice();
+            } else {
+                startCharacterPractice();
             }
         }
 
-        function startQuiz() {
-            const mode = document.getElementById("mode").value;
-            const range = document.getElementById("range").value;
-            let fullSet = [];
-
-            if (mode === "consonants") {
-                fullSet = thaiConsonants;
-            } else if (mode === "vowels") {
-                fullSet = thaiVowels;
-            } else if (mode === "match-symbol") {
-                fullSet = [...thaiConsonants, ...thaiVowels];
-            }
-
-            if (range === "5") {
-                selectedSet = fullSet.slice(0, 5);
-            } else if (range === "next5") {
-                selectedSet = fullSet.slice(5, 10);
-            } else if (range === "10") {
-                selectedSet = fullSet.slice(0, 10);
-            } else if (range === "15") {
-                selectedSet = fullSet.slice(0, 15);
-            } else if (range === "20") {
-                selectedSet = fullSet.slice(0, 20);
-            } else if (range === "25") {
-                selectedSet = fullSet.slice(0, 25);
+        function startCharacterPractice() {
+            const charSet = charSetSelect.value;
+            const difficulty = difficultySelect.value;
+            
+            // Determine character set
+            currentSet = charSet === 'consonants' ? thaiConsonants : 
+                        charSet === 'vowels' ? thaiVowels : 
+                        [...thaiConsonants, ...thaiVowels];
+            
+            // Determine range based on difficulty
+            if (difficulty === 'custom') {
+                const start = parseInt(startRange.value) - 1;
+                const end = parseInt(endRange.value);
+                selectedSet = currentSet.slice(start, end);
             } else {
-                selectedSet = fullSet;
+                const count = difficulty === 'beginner' ? 10 : 
+                             difficulty === 'intermediate' ? 20 : 
+                             currentSet.length;
+                selectedSet = currentSet.slice(0, count);
             }
-
+            
+            // Reset game state
             score = 0;
-            document.getElementById("score").innerText = "Score: " + score;
+            streak = 0;
+            questionsAnswered = 0;
+            totalQuestions = selectedSet.length;
+            mistakeTracker = {};
+            previousQuestions = [];
+            answerRevealed = false;
             
-            // Show/hide appropriate UI elements based on mode
-            if (mode === "match-symbol") {
-                document.getElementById("options-container").style.display = "flex";
-                document.getElementById("text-input-container").style.display = "none";
+            // Update UI
+            updateStats();
+            setupUIForMode();
+            
+            // Start with first question
+            if (currentMode === 'flashcards') {
+                nextFlashcard();
             } else {
-                document.getElementById("options-container").style.display = "none";
-                document.getElementById("text-input-container").style.display = "block";
+                nextQuestion();
             }
             
-            nextQuestion();
+            // Show quiz area
+            quizArea.style.display = 'block';
+            readingPractice.style.display = 'none';
+            referenceContainer.style.display = 'none';
+        }
+
+        function startReadingPractice() {
+            currentLevel = 1;
+            currentPassage = 0;
+            loadPassage();
+            
+            // Show reading practice area
+            quizArea.style.display = 'none';
+            readingPractice.style.display = 'block';
+            referenceContainer.style.display = 'none';
+        }
+
+        function setupUIForMode() {
+            // Show appropriate UI elements based on mode
+            const isMatchMode = currentMode === 'match-symbol';
+            const isTypingMode = currentMode === 'typing';
+            const isFlashcardMode = currentMode === 'flashcards';
+            
+            optionsContainer.style.display = isMatchMode ? 'grid' : 'none';
+            inputContainer.style.display = isTypingMode ? 'block' : 'none';
+            flashcardControls.style.display = isFlashcardMode ? 'flex' : 'none';
+            
+            // Reset display elements
+            thaiCharEl.textContent = '';
+            pronunciationEl.textContent = '';
+            strokeContainer.innerHTML = '';
+            feedbackEl.innerHTML = '';
+            answerInput.value = '';
+            
+            // Update progress bar
+            updateProgressBar();
+        }
+
+        function nextFlashcard() {
+            if (selectedSet.length === 0) {
+                endQuiz();
+                return;
+            }
+
+            // Prioritize characters with most mistakes
+            selectedSet.sort((a, b) => 
+                (mistakeTracker[b.char] || 0) - (mistakeTracker[a.char] || 0)
+            );
+
+            // Get a random question, avoiding immediate repeats
+            let availableQuestions = selectedSet.filter(q => !previousQuestions.includes(q.char));
+            if (availableQuestions.length === 0) availableQuestions = [...selectedSet];
+            
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+            questionsAnswered++;
+            
+            // Keep track of recent questions to avoid repeats
+            previousQuestions.push(currentQuestion.char);
+            if (previousQuestions.length > 3) previousQuestions.shift();
+
+            // Reset answer revealed state
+            answerRevealed = false;
+
+            displayFlashcard();
+        }
+
+        function displayFlashcard() {
+            questionEl.textContent = 'What is the pronunciation of:';
+            thaiCharEl.textContent = currentQuestion.char;
+            pronunciationEl.textContent = '';
+            feedbackEl.innerHTML = '';
+            displayStrokeOrder();
+        }
+
+        function revealFlashcardAnswer() {
+            if (!answerRevealed) {
+                pronunciationEl.textContent = currentQuestion.roman;
+                feedbackEl.innerHTML = `
+                    <div class="extra-info">Example: ${currentQuestion.example || 'No example available'}</div>
+                `;
+                answerRevealed = true;
+            }
+        }
+
+        function nextQuestion() {
+            if (selectedSet.length === 0) {
+                endQuiz();
+                return;
+            }
+
+            // Prioritize characters with most mistakes
+            selectedSet.sort((a, b) => 
+                (mistakeTracker[b.char] || 0) - (mistakeTracker[a.char] || 0)
+            );
+
+            // Get a random question, avoiding immediate repeats
+            let availableQuestions = selectedSet.filter(q => !previousQuestions.includes(q.char));
+            if (availableQuestions.length === 0) availableQuestions = [...selectedSet];
+            
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+            questionsAnswered++;
+            
+            // Keep track of recent questions to avoid repeats
+            previousQuestions.push(currentQuestion.char);
+            if (previousQuestions.length > 3) previousQuestions.shift();
+
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            // Reset UI elements
+            feedbackEl.innerHTML = '';
+            answerInput.value = '';
+            
+            if (currentMode === 'match-symbol') {
+                questionEl.textContent = 'Match the Thai symbol for:';
+                thaiCharEl.textContent = '';
+                pronunciationEl.textContent = currentQuestion.roman;
+                displayOptions();
+                displayStrokeOrder();
+            } 
+            else if (currentMode === 'typing') {
+                questionEl.textContent = 'Type the pronunciation for:';
+                thaiCharEl.textContent = currentQuestion.char;
+                pronunciationEl.textContent = '';
+                displayStrokeOrder();
+                answerInput.focus();
+            }
+        }
+
+        function displayOptions() {
+            optionsContainer.innerHTML = '';
+            
+            // Generate options (1 correct + 3 incorrect)
+            const options = generateOptions(currentQuestion);
+            
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option.char;
+                button.addEventListener('click', () => checkAnswer(option));
+                optionsContainer.appendChild(button);
+            });
         }
 
         function generateOptions(correctItem) {
             let options = [correctItem];
             let allItems = [...thaiConsonants, ...thaiVowels];
             
-            // Remove the correct item from the pool
-            allItems = allItems.filter(item => item[0] !== correctItem[0] && item[1] !== correctItem[1]);
+            // Remove the correct item and similar-looking characters
+            allItems = allItems.filter(item => 
+                item.char !== correctItem.char && 
+                !options.some(opt => opt.char === item.char)
+            );
             
-            // Shuffle the array and pick 3 random items
-            for (let i = 0; i < 3; i++) {
+            // Add 3 random options
+            while (options.length < 4 && allItems.length > 0) {
                 const randomIndex = Math.floor(Math.random() * allItems.length);
                 options.push(allItems[randomIndex]);
-                allItems.splice(randomIndex, 1); // Remove the selected item to avoid duplicates
+                allItems.splice(randomIndex, 1);
             }
             
             // Shuffle the options
             return options.sort(() => Math.random() - 0.5);
         }
 
-        function nextQuestion() {
-            if (selectedSet.length === 0) return;
-
-            let randomIndex;
-            let newQuestion;
-
-            do {
-                randomIndex = Math.floor(Math.random() * selectedSet.length);
-                newQuestion = selectedSet[randomIndex];
-            } while (newQuestion === previousQuestion);
-
-            currentQuestion = newQuestion;
-            previousQuestion = currentQuestion;
-
-            const mode = document.getElementById("mode").value;
-            const questionElement = document.getElementById("question");
-            const symbolElement = document.getElementById("thai-symbol");
-            const optionsContainer = document.getElementById("options-container");
-
-            if (mode === "match-symbol") {
-                questionElement.innerText = "What is the Thai symbol for:";
-                symbolElement.innerText = currentQuestion[1];
-                
-                // Generate and display options
-                currentOptions = generateOptions(currentQuestion);
-                optionsContainer.innerHTML = "";
-                
-                currentOptions.forEach((option, index) => {
-                    const button = document.createElement("button");
-                    button.className = "option-button";
-                    button.innerText = option[0];
-                    button.onclick = () => checkAnswer(option[0]);
-                    optionsContainer.appendChild(button);
-                });
-            } else {
-                questionElement.innerText = "What is the Romanized pronunciation of:";
-                symbolElement.innerText = currentQuestion[0];
+        function displayStrokeOrder() {
+            if (!currentQuestion.strokes) return;
+            
+            strokeContainer.innerHTML = `
+                <svg class="stroke-svg" viewBox="0 0 100 100">
+                    <path class="stroke-path" d="${currentQuestion.strokes}" />
+                </svg>
+            `;
+            
+            // Add tone marker if consonant has class
+            if (currentQuestion.class) {
+                const toneMarker = document.createElement('div');
+                toneMarker.className = 'tone-marker';
+                toneMarker.textContent = getToneMarker(currentQuestion.class);
+                strokeContainer.appendChild(toneMarker);
             }
-
-            document.getElementById("answer").value = "";
-            document.getElementById("answer").focus();
-            document.getElementById("feedback").innerText = "";
         }
 
-        function checkAnswer(selectedSymbol) {
-            const feedbackElement = document.getElementById("feedback");
+        function getToneMarker(consonantClass) {
+            switch(consonantClass) {
+                case "high": return "↑";
+                case "mid": return "→";
+                case "low": return "↓";
+                default: return "";
+            }
+        }
+
+        function checkAnswer(selectedOption) {
+            const isCorrect = selectedOption.char === currentQuestion.char;
+            processAnswer(isCorrect, selectedOption.char);
+        }
+
+        function checkTypedAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = currentQuestion.roman.toLowerCase();
+            const isCorrect = userAnswer === correctAnswer;
             
-            if (selectedSymbol === currentQuestion[0]) {
-                feedbackElement.innerText = "Correct!";
-                feedbackElement.className = "correct";
+            processAnswer(isCorrect, userAnswer);
+        }
+
+        function processAnswer(isCorrect, userAnswer) {
+            // Update score and streak
+            if (isCorrect) {
                 score++;
+                streak++;
+                createConfetti();
             } else {
-                feedbackElement.innerText = `Incorrect! Correct answer: ${currentQuestion[0]}`;
-                feedbackElement.className = "incorrect";
+                streak = 0;
+                // Track mistakes
+                mistakeTracker[currentQuestion.char] = (mistakeTracker[currentQuestion.char] || 0) + 1;
             }
-
-            document.getElementById("score").innerText = "Score: " + score;
-            setTimeout(nextQuestion, 1000);
+            
+            updateStats();
+            showFeedback(isCorrect, userAnswer);
+            
+            // Prepare for next question or end quiz
+            setTimeout(() => {
+                if (questionsAnswered >= totalQuestions * 2 || score >= totalQuestions) {
+                    endQuiz();
+                } else {
+                    nextQuestion();
+                }
+            }, 1500);
         }
 
-        function submitAndNext() {
-            const answerInput = document.getElementById("answer").value.trim().toLowerCase();
-            let correctAnswer = currentQuestion[1].toLowerCase();
-
-            const feedbackElement = document.getElementById("feedback");
-
-            if (answerInput === correctAnswer.toLowerCase()) {
-                feedbackElement.innerText = "Correct!";
-                feedbackElement.className = "correct";
-                score++;
+        function showFeedback(isCorrect, userAnswer) {
+            feedbackEl.className = isCorrect ? 'feedback correct-feedback' : 'feedback incorrect-feedback';
+            
+            if (isCorrect) {
+                feedbackEl.innerHTML = `
+                    <div>✓ Correct! ${currentQuestion.char} = ${currentQuestion.roman}</div>
+                    <div class="extra-info">Example: ${currentQuestion.example || 'No example available'}</div>
+                `;
             } else {
-                feedbackElement.innerText = `Incorrect! Correct answer: ${correctAnswer}`;
-                feedbackElement.className = "incorrect";
-            }
-
-            document.getElementById("score").innerText = "Score: " + score;
-            setTimeout(nextQuestion, 1000);
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                submitAndNext();
+                feedbackEl.innerHTML = `
+                    <div>✗ Incorrect</div>
+                    <div class="extra-info">
+                        ${userAnswer ? `You answered: "${userAnswer}"<br>` : ''}
+                        Correct answer: "${currentQuestion.roman}"<br>
+                        ${currentQuestion.example ? `Example: ${currentQuestion.example}` : ''}
+                    </div>
+                `;
             }
         }
 
-        function showAlphabet() {
-            const consonantColumn = document.getElementById('consonant-column');
-            const vowelColumn = document.getElementById('vowel-column');
+        function loadPassage() {
+            const passages = readingTexts[currentLevel];
+            currentPassage = currentPassage % passages.length;
+            const passage = passages[currentPassage];
             
-            consonantColumn.innerHTML = thaiConsonants.map(item => `<div>${item[0]} (${item[1]})</div>`).join('');
-            vowelColumn.innerHTML = thaiVowels.map(item => `<div>${item[0]} (${item[1]})</div>`).join('');
+            thaiTextEl.textContent = passage.thai;
+            transliterationEl.textContent = passage.transliteration;
+            translationEl.textContent = passage.translation;
             
-            document.getElementById('alphabet-container').style.display = 'block';
+            // Hide helper texts initially
+            transliterationEl.style.display = 'none';
+            translationEl.style.display = 'none';
+        }
+
+        function toggleTransliteration() {
+            const el = transliterationEl;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleTranslation() {
+            const el = translationEl;
+            el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function nextReadingPassage() {
+            currentPassage++;
+            loadPassage();
+        }
+
+        function updateStats() {
+            scoreEl.textContent = score;
+            streakEl.textContent = streak;
+            remainingEl.textContent = totalQuestions - score;
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = totalQuestions > 0 ? (score / totalQuestions) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                confetti.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        function endQuiz() {
+            questionEl.textContent = 'Quiz Complete!';
+            thaiCharEl.textContent = '🎉';
+            pronunciationEl.textContent = '';
+            strokeContainer.innerHTML = '';
+            optionsContainer.innerHTML = '';
+            inputContainer.style.display = 'none';
+            flashcardControls.style.display = 'none';
+            
+            feedbackEl.className = 'feedback correct-feedback';
+            feedbackEl.innerHTML = `
+                <div>Final Score: ${score}/${totalQuestions}</div>
+                <div class="extra-info">${getPerformanceMessage(score/totalQuestions)}</div>
+            `;
+        }
+
+        function getPerformanceMessage(percentage) {
+            if (percentage >= 0.9) return "Excellent! You've mastered these characters!";
+            if (percentage >= 0.7) return "Good job! Keep practicing to improve!";
+            if (percentage >= 0.5) return "Not bad! Review the characters and try again!";
+            return "Keep practicing! You'll get better with more practice!";
         }
     </script>
 </body>
